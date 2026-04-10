@@ -1,0 +1,162 @@
+{
+  "name": "W3 extra extra mile - Creazione contenuti per SEO & Marketing - Daniele Fiordilino",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "666dae64-e14b-439a-aa8c-b607099f5c83",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09FLAWBE2H",
+          "mode": "list",
+          "cachedResultName": "n8n"
+        },
+        "text": "=Il tuo flusso \"{{ $json.workflow.name }}\" ha riscontrato un <{{ $json.execution.url }}|errore>.",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        224,
+        0
+      ],
+      "id": "a1940d24-d917-4bcf-8b96-ef88700a6418",
+      "name": "Send a message",
+      "webhookId": "e95212e4-a67a-4932-adfb-c7b7c43c8ed6",
+      "executeOnce": false,
+      "retryOnFail": true,
+      "maxTries": 2,
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "oe9P2sr9oxB2nqo5",
+          "name": "Slack account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Error Trigger": [
+      {
+        "json": {
+          "execution": {
+            "id": "139",
+            "url": "https://accountdan.app.n8n.cloud/workflow/Rihyl0be1sZespTo/executions/139",
+            "error": {
+              "level": "warning",
+              "tags": {
+                "reWrapped": true
+              },
+              "description": "[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+              "timestamp": 1775140306466,
+              "context": {},
+              "functionality": "regular",
+              "name": "NodeOperationError",
+              "node": {
+                "parameters": {
+                  "notice": "",
+                  "promptType": "define",
+                  "text": "={\n  \"dati_input\": {\n    \"argomento_da_trattare\": \"{{ $json.Argomento }}\",\n    \"tipologia_richiesta\": \"{{ $json['Tipologia di contenuto'] }}\"\n  }\n}",
+                  "hasOutputParser": true,
+                  "needsFallback": false,
+                  "messages": {
+                    "messageValues": [
+                      {
+                        "type": "SystemMessagePromptTemplate",
+                        "message": "={ \"istruzioni_ruolo\": \"Sei una copywriter SEO e content strategist esperta. Il tuo compito è creare un contenuto di marketing ad alto impatto per l'argomento fornito. L'output deve essere un singolo oggetto JSON rigorosamente valido, suddiviso in campi strutturati contenenti **esclusivamente testo puro**, per la pubblicazione su Notion tramite n8n.\", \"vincoli_tecnici_imperativi\": {     \"output_formato\": \"JSON valido. Non includere testo esplicativo, note o commenti prima o dopo l'oggetto JSON.\",     \"formattazione_testo\": \"Il testo di tutti i campi (inclusi titoli e contenuti) deve essere **testo puro**. Non usare Markdown, HTML, simboli per liste o enfasi. La formattazione del blocco (es. Grassetto, Titoli) sarà gestita interamente da n8n e Notion.\",     \"limite_caratteri_per_campo\": \"Il testo di ciascun campo NON deve MAI superare i **1800 caratteri**. Questo è un limite rigido. Se un blocco di testo supera i 1800 caratteri, spezzalo immediatamente in blocchi sequenziali ('paragrafo_N', 'list_item_N', ecc.), ciascuno inferiore a 1800 caratteri. Devi monitorare e verificare attentamente il conteggio dei caratteri di ogni blocco che generi.\"   },   \"struttura_contenuto\": {     \"lunghezza_totale_stimata\": \"Adatta la lunghezza per rispettare i vincoli di carattere, sviluppando comunque la tipologia richiesta.\",     \"tono\": \"Informativo, autorevole e orientato alla soluzione, coerente con la tipologia di contenuto.\",     \"obiettivi\": \"Genera una struttura logica che soddisfi la tipologia ('{{ $json['Tipologia di contenuto'] }}') e sia ottimizzata per l'argomento SEO ('{{ $json.Argomento }}').\"   },   \"output_richiesto_json\": {     \"post_title\": \"Titolo principale dell'Articolo\",     \"metadata_keywords\": \"Elenco di parole chiave (separate da virgola) relative all'argomento.\",     \"introduzione\": \"Paragrafo di apertura in testo puro. (Max 1800 caratteri).\",     \"sezione_1_title\": \"Titolo Sezione 1\",     \"sezione_1_content_paragrafo_1\": \"Primo paragrafo che sviluppa il contenuto in base alla tipologia richiesta. (Max 1800 caratteri).\",     \"sezione_2_title\": \"Titolo Sezione 2\",     \"sezione_2_content_list_punto_1\": \"Primo elemento chiave (testo puro per il punto 1).\",     \"sezione_2_content_list_punto_2\": \"Secondo elemento chiave (testo puro per il punto 2).\",     \"conclusione\": \"Paragrafo di riepilogo finale.\",     \"call_to_action\": \"Chiamata all'azione generica in testo puro.\" } }"
+                      }
+                    ]
+                  },
+                  "batching": {}
+                },
+                "type": "@n8n/n8n-nodes-langchain.chainLlm",
+                "typeVersion": 1.9,
+                "position": [
+                  448,
+                  48
+                ],
+                "id": "608c9ca9-85cf-4469-acc4-b28f079a0a1b",
+                "name": "Basic LLM Chain"
+              },
+              "messages": [
+                "[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent: [503 Service Unavailable] This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
+              ],
+              "message": "Service unavailable - try again later or consider setting this node to retry automatically (in the node settings)",
+              "stack": "NodeOperationError: Service unavailable - try again later or consider setting this node to retry automatically (in the node settings)\n    at /usr/local/lib/node_modules/n8n/node_modules/.pnpm/@n8n+n8n-nodes-langchain@file+packages+@n8n+nodes-langchain_2d77d26d5189fc8163902e1ffb276162/node_modules/@n8n/n8n-nodes-langchain/nodes/chains/ChainLLM/ChainLlm.node.ts:116:13\n    at Array.forEach (<anonymous>)\n    at ExecuteContext.execute (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/@n8n+n8n-nodes-langchain@file+packages+@n8n+nodes-langchain_2d77d26d5189fc8163902e1ffb276162/node_modules/@n8n/n8n-nodes-langchain/nodes/chains/ChainLLM/ChainLlm.node.ts:94:18)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at WorkflowExecute.executeNode (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-core@file+packages+core_@opentelemetry+api@1.9.0_@opentelemetry+exporter-trace-otlp_9f358c3eeaef0d2736f54ac9757ada43/node_modules/n8n-core/src/execution-engine/workflow-execute.ts:1043:8)\n    at WorkflowExecute.runNode (/usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-core@file+packages+core_@opentelemetry+api@1.9.0_@opentelemetry+exporter-trace-otlp_9f358c3eeaef0d2736f54ac9757ada43/node_modules/n8n-core/src/execution-engine/workflow-execute.ts:1222:11)\n    at /usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-core@file+packages+core_@opentelemetry+api@1.9.0_@opentelemetry+exporter-trace-otlp_9f358c3eeaef0d2736f54ac9757ada43/node_modules/n8n-core/src/execution-engine/workflow-execute.ts:1668:27\n    at /usr/local/lib/node_modules/n8n/node_modules/.pnpm/n8n-core@file+packages+core_@opentelemetry+api@1.9.0_@opentelemetry+exporter-trace-otlp_9f358c3eeaef0d2736f54ac9757ada43/node_modules/n8n-core/src/execution-engine/workflow-execute.ts:2313:11"
+            },
+            "lastNodeExecuted": "Basic LLM Chain",
+            "mode": "trigger",
+            "executionContext": {
+              "version": 1,
+              "establishedAt": 1775140301092,
+              "source": "trigger",
+              "redaction": {
+                "version": 1,
+                "policy": "none"
+              },
+              "triggerNode": {
+                "name": "Schedule Trigger",
+                "type": "n8n-nodes-base.scheduleTrigger"
+              }
+            }
+          },
+          "workflow": {
+            "id": "Rihyl0be1sZespTo",
+            "name": "W3 - Creazione contenuti per SEO & Marketing - Daniele Fiordilino"
+          }
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "18c645ce-7fcb-49f7-81ad-0e165d56ebeb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "285e6b7035d57255323414f2adfae0530b9d9fde4f34f40ef0775256340f9783"
+  },
+  "id": "5iQbvZHrtrzsRivw",
+  "tags": [
+    {
+      "updatedAt": "2026-04-02T03:03:36.144Z",
+      "createdAt": "2026-04-02T03:03:36.144Z",
+      "id": "C48chmqIsALjXBIz",
+      "name": "Gestione errori"
+    },
+    {
+      "updatedAt": "2026-04-02T02:24:23.981Z",
+      "createdAt": "2026-04-02T02:24:23.981Z",
+      "id": "FFlCI8L38YjiyRSk",
+      "name": "Slack"
+    }
+  ]
+}

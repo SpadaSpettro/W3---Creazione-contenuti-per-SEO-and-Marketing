@@ -1,0 +1,435 @@
+{
+  "name": "W3 - Creazione contenuti per SEO & Marketing - Daniele Fiordilino",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 12,
+              "triggerAtMinute": 30
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        176
+      ],
+      "id": "44179100-2f9e-4c46-8257-bf0d09947445",
+      "name": "Schedule Trigger",
+      "retryOnFail": false,
+      "maxTries": 2,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1xbe4hck7YAF5o8eBziFt0Di1VlahvL_W2sJfiKvKsnA",
+          "mode": "list",
+          "cachedResultName": "Argomenti Notion (n8n)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xbe4hck7YAF5o8eBziFt0Di1VlahvL_W2sJfiKvKsnA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Foglio1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xbe4hck7YAF5o8eBziFt0Di1VlahvL_W2sJfiKvKsnA/edit#gid=0"
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "specifyRangeA1",
+              "range": "A1:D9"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        176
+      ],
+      "id": "6dad47c4-91ab-4e98-9a8d-7d5258d51000",
+      "name": "Ottieni argomenti",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "V9qNWYbWcxJgHyp9",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        464,
+        272
+      ],
+      "id": "0392d902-a4c7-4094-8c73-cc65293efaf5",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "M5znk5f1CeiRvNeL",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "value": "28326325-9286-8014-9273-fe500e0da51b",
+          "mode": "list",
+          "cachedResultName": "Database n8n",
+          "cachedResultUrl": "https://www.notion.so/28326325928680149273fe500e0da51b"
+        },
+        "title": "={{ $node[\"Ottieni argomenti\"].json[\"Argomento\"] }}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Nome|title",
+              "title": "={{ $node[\"Ottieni argomenti\"].json[\"Argomento\"] }}"
+            },
+            {
+              "key": "Descrizione|rich_text",
+              "textContent": "={{ $json.output.post_title }}"
+            },
+            {
+              "key": "Data di creazione|date",
+              "date": "={{ $now }}"
+            }
+          ]
+        },
+        "blockUi": {
+          "blockValues": [
+            {
+              "type": "heading_1",
+              "textContent": "={{ $json.output.post_title }}"
+            },
+            {
+              "textContent": "={{ $json.output.introduzione }}"
+            },
+            {
+              "type": "heading_2",
+              "textContent": "={{ $json.output.sezione_1_title }}"
+            },
+            {
+              "textContent": "={{ $json.output.sezione_1_content_paragrafo_1 }}"
+            },
+            {
+              "textContent": "={{ $json.output.sezione_1_content_paragrafo_2 }}"
+            },
+            {
+              "type": "heading_2",
+              "textContent": "={{ $json.output.sezione_2_title }}"
+            },
+            {
+              "type": "bulleted_list_item",
+              "textContent": "={{ $json.output.sezione_2_content_list_punto_1 }}"
+            },
+            {
+              "type": "bulleted_list_item",
+              "textContent": "={{ $json.output.sezione_2_content_list_punto_2 }}"
+            },
+            {
+              "textContent": "={{ $json.output.conclusione }}"
+            },
+            {
+              "type": "heading_3",
+              "textContent": "={{ $json.output.call_to_action }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        800,
+        0
+      ],
+      "id": "b45f61e2-15f1-4e17-abf1-0a206227e437",
+      "name": "Create a database page",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "notionApi": {
+          "id": "X1SQhT3BoO32u9AE",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n    \"post_title\": \"Titolo principale dell'Articolo\",\n  \"metadata_keywords\": \"Elenco di parole chiave (separate da virgola) relative all'argomento.\",\n    \"introduzione\": \"Paragrafo di introduzione accattivante. (Max 1800 caratteri).\",\n    \"sezione_1_title\": \"Titolo Sezione Principale 1\",\n    \"sezione_1_content_paragrafo_1\": \"Primo paragrafo del contenuto della Sezione 1. Testo puro. Se necessario, spezzalo qui. (Max 1800 caratteri).\",\n    \"sezione_1_content_paragrafo_2\": \"Secondo blocco di testo (solo se il precedente ha superato i 1800 caratteri).\",\n    \"sezione_2_title\": \"Titolo Sezione Principale 2\",\n    \"sezione_2_content_list_punto_1\": \"Primo punto chiave in una lista (testo puro).\",\n  \"sezione_2_content_list_punto_2\": \"Secondo punto chiave in una lista (testo puro).\",\n    \"conclusione\": \"Paragrafo riassuntivo e forte.\",\n    \"call_to_action\": \"Chiamata all'azione generica e diretta: Clicca qui per scoprire di più sui nostri servizi!\"\n  }"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        592,
+        272
+      ],
+      "id": "4a5da57a-5077-45be-8d75-fad8a595171b",
+      "name": "Structured Output Parser",
+      "notesInFlow": true,
+      "notes": "Definisce il formato JSON da rispettare per l'output."
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        800,
+        272
+      ],
+      "id": "6a97c216-7c4a-4771-928a-aad6f775f888",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1xbe4hck7YAF5o8eBziFt0Di1VlahvL_W2sJfiKvKsnA",
+          "mode": "list",
+          "cachedResultName": "Argomenti Notion (n8n)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xbe4hck7YAF5o8eBziFt0Di1VlahvL_W2sJfiKvKsnA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Foglio1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xbe4hck7YAF5o8eBziFt0Di1VlahvL_W2sJfiKvKsnA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Argomento": "={{ $json.Argomento }}",
+            "Keywords": "={{ $json.output.metadata_keywords }}"
+          },
+          "matchingColumns": [
+            "Argomento"
+          ],
+          "schema": [
+            {
+              "id": "Argomento",
+              "displayName": "Argomento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Tipologia di contenuto",
+              "displayName": "Tipologia di contenuto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1024,
+        272
+      ],
+      "id": "4c4758d5-ce9a-44d9-be63-06c2a1f17b18",
+      "name": "Inserisci keywords",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 3000,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "V9qNWYbWcxJgHyp9",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={\n  \"dati_input\": {\n    \"argomento_da_trattare\": \"{{ $json.Argomento }}\",\n    \"tipologia_richiesta\": \"{{ $json['Tipologia di contenuto'] }}\"\n  }\n}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "={ \"istruzioni_ruolo\": \"Sei una copywriter SEO e content strategist esperta. Il tuo compito è creare un contenuto di marketing ad alto impatto per l'argomento fornito. L'output deve essere un singolo oggetto JSON rigorosamente valido, suddiviso in campi strutturati contenenti **esclusivamente testo puro**, per la pubblicazione su Notion tramite n8n.\", \"vincoli_tecnici_imperativi\": {     \"output_formato\": \"JSON valido. Non includere testo esplicativo, note o commenti prima o dopo l'oggetto JSON.\",     \"formattazione_testo\": \"Il testo di tutti i campi (inclusi titoli e contenuti) deve essere **testo puro**. Non usare Markdown, HTML, simboli per liste o enfasi. La formattazione del blocco (es. Grassetto, Titoli) sarà gestita interamente da n8n e Notion.\",     \"limite_caratteri_per_campo\": \"Il testo di ciascun campo NON deve MAI superare i **1800 caratteri**. Questo è un limite rigido. Se un blocco di testo supera i 1800 caratteri, spezzalo immediatamente in blocchi sequenziali ('paragrafo_N', 'list_item_N', ecc.), ciascuno inferiore a 1800 caratteri. Devi monitorare e verificare attentamente il conteggio dei caratteri di ogni blocco che generi.\"   },   \"struttura_contenuto\": {     \"lunghezza_totale_stimata\": \"Adatta la lunghezza per rispettare i vincoli di carattere, sviluppando comunque la tipologia richiesta.\",     \"tono\": \"Informativo, autorevole e orientato alla soluzione, coerente con la tipologia di contenuto.\",     \"obiettivi\": \"Genera una struttura logica che soddisfi la tipologia ('{{ $json['Tipologia di contenuto'] }}') e sia ottimizzata per l'argomento SEO ('{{ $json.Argomento }}').\"   },   \"output_richiesto_json\": {     \"post_title\": \"Titolo principale dell'Articolo\",     \"metadata_keywords\": \"Elenco di parole chiave (separate da virgola) relative all'argomento.\",     \"introduzione\": \"Paragrafo di apertura in testo puro. (Max 1800 caratteri).\",     \"sezione_1_title\": \"Titolo Sezione 1\",     \"sezione_1_content_paragrafo_1\": \"Primo paragrafo che sviluppa il contenuto in base alla tipologia richiesta. (Max 1800 caratteri).\",     \"sezione_2_title\": \"Titolo Sezione 2\",     \"sezione_2_content_list_punto_1\": \"Primo elemento chiave (testo puro per il punto 1).\",     \"sezione_2_content_list_punto_2\": \"Secondo elemento chiave (testo puro per il punto 2).\",     \"conclusione\": \"Paragrafo di riepilogo finale.\",     \"call_to_action\": \"Chiamata all'azione generica in testo puro.\" } }"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        448,
+        48
+      ],
+      "id": "608c9ca9-85cf-4469-acc4-b28f079a0a1b",
+      "name": "Basic LLM Chain"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Ottieni argomenti",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ottieni argomenti": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Inserisci keywords",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Create a database page",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "5iQbvZHrtrzsRivw",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "8a7ac975-7b78-4c09-85a3-ba22ad3cba4c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "285e6b7035d57255323414f2adfae0530b9d9fde4f34f40ef0775256340f9783"
+  },
+  "id": "Rihyl0be1sZespTo",
+  "tags": [
+    {
+      "updatedAt": "2026-04-03T22:02:03.371Z",
+      "createdAt": "2026-04-02T03:02:15.868Z",
+      "id": "L8OQl1Fci8n6SEwU",
+      "name": "Google Sheets"
+    },
+    {
+      "updatedAt": "2026-04-02T03:02:21.287Z",
+      "createdAt": "2026-04-02T03:02:21.287Z",
+      "id": "gqH2eJsEuq2iGZkb",
+      "name": "Notion"
+    },
+    {
+      "updatedAt": "2026-04-02T03:02:46.710Z",
+      "createdAt": "2026-04-02T03:02:46.710Z",
+      "id": "oR1knSWoKLbEg04u",
+      "name": "IA"
+    }
+  ]
+}
