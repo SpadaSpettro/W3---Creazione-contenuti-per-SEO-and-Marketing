@@ -13,6 +13,6 @@ A workflow that automatically generates various types of marketing content daily
 
 
 
-###### Strumenti utilizzati:
+###### Tools used:
 
 **n8n, Google Sheets, Notion, Slack, IA.**
